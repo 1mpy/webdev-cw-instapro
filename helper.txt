@@ -1,0 +1,18 @@
+						API		API		API
+	
+function getPosts({ token })	-	запрос на все посты, 					GET
+function registerUser({ login, password, name, imageUrl })	- регистрация,  POST
+function loginUser({ login, password })	-	авторизация,					POST
+function uploadImage({ file })  - загрузка картинки, 						POST
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+					HELPER			HELPER		HELPER
+					
+getUserFromLocalStorage(user)	-	достает юзера из хранилища
+removeUserFromLocalStorage(user)	-	убирает юзера из хранилища
+saveUserToLocalStorage(user)	-	сохраняет юзера в хранилище
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
