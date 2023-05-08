@@ -6,11 +6,15 @@ import {
 } from "./header-component.js";
 import {
   posts,
-  goToPage
+  goToPage,
+  getToken,
+  renewPosts,
+  protectHtml,
 } from "../index.js";
+import { dislikeFunc, likeFunc } from "../api.js";
 
 export function renderPostsPageComponent({ appEl }) {
-  // TODO: реализовать рендер постов из api
+  // TODO: реализовать рендер постов из api ++++++++++
   console.log("Актуальный список постов:", posts);
 
   /**
@@ -38,12 +42,12 @@ export function renderPostsPageComponent({ appEl }) {
             }
             </button>
             <p class="post-likes-text">
-              Нравится: <strong>${post.likes}</strong>
+              Нравится: <strong>${post.likes.length > 0 ? "кому-то" : " "}</strong>
             </p>
           </div>
           <p class="post-text">
             <span class="user-name">${post.user.name}</span>
-            ${post.description}
+            ${protectHtml(post.description)}
           </p>
           <p class="post-date">
             19 минут назад
@@ -72,4 +76,19 @@ export function renderPostsPageComponent({ appEl }) {
       });
     });
   }
+
+  for (let likeButton of document.querySelectorAll(".like-button")) {
+    likeButton.addEventListener("click", () => {
+        if (likeButton.dataset.liked === "true" )
+        { dislikeFunc({token:getToken(), id:likeButton.dataset.postId}).then (() => renewPosts());}  // датасет из кнопки лайка  "post-id пприводить к виду postId"
+        else {
+          likeFunc({token:getToken(), id:likeButton.dataset.postId}).then (() => renewPosts());
+        }
+    });
+  }
+
 }
+
+
+
+

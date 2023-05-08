@@ -68,3 +68,48 @@ export function uploadImage({ file }) {
     return response.json();
   });
 }
+
+// Загружает пост на сервер
+export function uploadPost({ text, link, token }) {
+
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      description: text,
+      imageUrl: link
+    }),
+  }).then((response) => {
+    return response.json();
+  });
+}
+
+// поставить лайк
+
+export function likeFunc ({ id, token }) {
+ 
+  return fetch(`${postsHost}/${id}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  });
+}
+
+//убрать лайк
+
+export function dislikeFunc ({ id, token }) {
+ 
+  return fetch(`${postsHost}/${id}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  });
+}

@@ -1,4 +1,5 @@
 import { loginUser, registerUser } from "../api.js";
+import { protectHtml } from "../index.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
@@ -50,7 +51,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
               </div>
           </div>
       </div>    
-`;
+  `;
 
     appEl.innerHTML = appHtml;
 
@@ -79,8 +80,8 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       setError("");
 
       if (isLoginMode) {
-        const login = document.getElementById("login-input").value;
-        const password = document.getElementById("password-input").value;
+        const login = protectHtml(document.getElementById("login-input").value);
+        const password = protectHtml(document.getElementById("password-input").value);
 
         if (!login) {
           alert("Введите логин");
@@ -147,6 +148,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       renderForm();
     });
   };
+
 
   renderForm();
 }
