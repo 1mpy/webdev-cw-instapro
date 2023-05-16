@@ -1,6 +1,7 @@
 import { getPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
+import { renderUserPostsPageComponent } from "./components/user-posts-component.js";
 import {
   ADD_POSTS_PAGE,
   AUTH_PAGE,
@@ -19,8 +20,9 @@ import {
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
+export let selectedUser = null;
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -34,6 +36,21 @@ export const logout = () => {
 /**
  * Включает страницу приложения
  */
+
+export const renewPosts = () => {
+
+return getPosts({ token: getToken() })
+.then((newPosts) => {
+  posts = newPosts;
+  renderApp();
+})
+.catch((error) => {
+  console.error(error);
+  goToPage(POSTS_PAGE);
+});
+};
+// сделали гет-запрос, результат сохранили в постс, сделалили рендер
+
 export const goToPage = (newPage, data) => {
   if (
     [
@@ -70,7 +87,7 @@ export const goToPage = (newPage, data) => {
       // TODO: реализовать получение постов юзера из API
       console.log("Открываю страницу пользователя: ", data.userId);
       page = USER_POSTS_PAGE;
-      posts = [];
+      selectedUser = data.userId;
       return renderApp();
     }
 
@@ -109,9 +126,9 @@ const renderApp = () => {
   if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
       appEl,
-      onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
+      getToken,
+      redirectToPosts() {
+        // TODO: реализовать добавление поста в API        
         goToPage(POSTS_PAGE);
       },
     });
@@ -125,9 +142,17 @@ const renderApp = () => {
 
   if (page === USER_POSTS_PAGE) {
     // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+    // appEl.innerHTML = "Здесь будет страница фотографий пользователя";
+    return renderUserPostsPageComponent ({
+      appEl,
+      selectedUser,
+    });
   }
 };
+
+
+export function protectHtml(anything = "") {
+  return anything.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
 
 goToPage(POSTS_PAGE);
